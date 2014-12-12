@@ -8,21 +8,21 @@
 
 #usage information: pathoscope.py -h
 
-#       Pathoscope 2.0 - Predicts strains of genomes in unassembled Nextgen seq data
-#       Copyright (C) 2013  Johnson Lab - Boston University
+#	   Pathoscope 2.0 - Predicts strains of genomes in unassembled Nextgen seq data
+#	   Copyright (C) 2013  Johnson Lab - Boston University
 #
-#       This program is free software: you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation, either version 3 of the License, or
-#       any later version.
+#	   This program is free software: you can redistribute it and/or modify
+#	   it under the terms of the GNU General Public License as published by
+#	   the Free Software Foundation, either version 3 of the License, or
+#	   any later version.
 #
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
+#	   This program is distributed in the hope that it will be useful,
+#	   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	   GNU General Public License for more details.
 #
-#       You should have received a copy of the GNU General Public License
-#       along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#	   You should have received a copy of the GNU General Public License
+#	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os, sys
 pathoscopedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -182,85 +182,89 @@ parser_d.add_argument('--contig', action='store_true', default=False, dest='rep_
 parser_d.add_argument('-samfile', action='store', dest='rep_ali_file', required=True,
 					help='SAM Alignment file path')
 
-# parse some argument lists
-inputArgs = parser.parse_args()
+
+def main():
+	# parse some argument lists
+	inputArgs = parser.parse_args()
 
 
 #### PathoID modules ####
 
-start = time();
+	start = time();
 
-if (inputArgs.subcommand=='LIB'):
+	if (inputArgs.subcommand=='LIB'):
 	################################################$
 	#append taxon id in the front of sequence header
 	################################################$
-	NAs = 'X'
-	if inputArgs.lib_dbuser!=NAs and inputArgs.lib_dbpasswd==NAs:
-		print 'if you want to use mysql, make sure that you install pathoDB and '
-		'also specify the corresponding mysql password correctly '
-		'(Ask your mysql admin to access the database).'
-	MysqlConf=(inputArgs.lib_dbhost,inputArgs.lib_dbport,inputArgs.lib_dbuser,inputArgs.lib_dbpasswd,inputArgs.lib_db)
-	taxon_ids=pathoLib.parse_input_app_build_nt_tgt(inputArgs.lib_taxon_ids)
-	exclude_taxon_ids=pathoLib.parse_input_app_build_nt_tgt(inputArgs.lib_exclude_taxon_ids)
-	(ncbiNt_ti,ncbiNt_invalid) = pathoLib.append_ti_into_fasta_app(inputArgs.lib_reference,
-		taxon_ids, exclude_taxon_ids, inputArgs.lib_subtax,MysqlConf, 
-		not(inputArgs.lib_nodesc), inputArgs.lib_online_search, inputArgs.lib_outprefix, 
-		inputArgs.lib_outdir)
+		NAs = 'X'
+		if inputArgs.lib_dbuser!=NAs and inputArgs.lib_dbpasswd==NAs:
+			print 'if you want to use mysql, make sure that you install pathoDB and '
+			'also specify the corresponding mysql password correctly '
+			'(Ask your mysql admin to access the database).'
+		MysqlConf=(inputArgs.lib_dbhost,inputArgs.lib_dbport,inputArgs.lib_dbuser,inputArgs.lib_dbpasswd,inputArgs.lib_db)
+		taxon_ids=pathoLib.parse_input_app_build_nt_tgt(inputArgs.lib_taxon_ids)
+		exclude_taxon_ids=pathoLib.parse_input_app_build_nt_tgt(inputArgs.lib_exclude_taxon_ids)
+		(ncbiNt_ti,ncbiNt_invalid) = pathoLib.append_ti_into_fasta_app(inputArgs.lib_reference,
+			taxon_ids, exclude_taxon_ids, inputArgs.lib_subtax,MysqlConf, 
+			not(inputArgs.lib_nodesc), inputArgs.lib_online_search, inputArgs.lib_outprefix, 
+			inputArgs.lib_outdir)
 
-if (inputArgs.subcommand=='MAP'):
-	pathoMapOptions = PathoMapA.PathoMapOptions()
-	pathoMapOptions.verbose = inputArgs.verbose
-	pathoMapOptions.outDir = inputArgs.map_outdir
-	pathoMapOptions.indexDir = inputArgs.map_indexdir
-	pathoMapOptions.outAlignFile = inputArgs.map_outalign
-	pathoMapOptions.inReadFile = inputArgs.map_inputread
-	pathoMapOptions.inReadFilePair1 = inputArgs.map_inputread1
-	pathoMapOptions.inReadFilePair2 = inputArgs.map_inputread2
-	pathoMapOptions.targetAlignParameters = inputArgs.map_targetalignparams
-	pathoMapOptions.filterAlignParameters = inputArgs.map_filteralignparams
-	if (len(inputArgs.map_targetref)>0):
-		pathoMapOptions.targetRefFiles = inputArgs.map_targetref.split(",")
-	if (len(inputArgs.map_filterref)>0):
-		pathoMapOptions.filterRefFiles = inputArgs.map_filterref.split(",")
-	if (len(inputArgs.map_targetindex)>0):
-		pathoMapOptions.targetIndexPrefixes = inputArgs.map_targetindex.split(",")
-	if (len(inputArgs.map_filterindex)>0):
-		pathoMapOptions.filterIndexPrefixes = inputArgs.map_filterindex.split(",")
-	if (len(inputArgs.map_targetalign)>0):
-		pathoMapOptions.targetAlignFiles = inputArgs.map_targetalign.split(",")
-	if (len(inputArgs.map_filteralign)>0):
-		pathoMapOptions.filterAlignFiles = inputArgs.map_filteralign.split(",")
-	pathoMapOptions.btHome = inputArgs.map_bthome
-	pathoMapOptions.numThreads = inputArgs.map_numthreads
-	pathoMapOptions.exp_tag = inputArgs.map_exp_tag + "-"
-	PathoMapA.processPathoMap(pathoMapOptions)
+	if (inputArgs.subcommand=='MAP'):
+		pathoMapOptions = PathoMapA.PathoMapOptions()
+		pathoMapOptions.verbose = inputArgs.verbose
+		pathoMapOptions.outDir = inputArgs.map_outdir
+		pathoMapOptions.indexDir = inputArgs.map_indexdir
+		pathoMapOptions.outAlignFile = inputArgs.map_outalign
+		pathoMapOptions.inReadFile = inputArgs.map_inputread
+		pathoMapOptions.inReadFilePair1 = inputArgs.map_inputread1
+		pathoMapOptions.inReadFilePair2 = inputArgs.map_inputread2
+		pathoMapOptions.targetAlignParameters = inputArgs.map_targetalignparams
+		pathoMapOptions.filterAlignParameters = inputArgs.map_filteralignparams
+		if (len(inputArgs.map_targetref)>0):
+			pathoMapOptions.targetRefFiles = inputArgs.map_targetref.split(",")
+		if (len(inputArgs.map_filterref)>0):
+			pathoMapOptions.filterRefFiles = inputArgs.map_filterref.split(",")
+		if (len(inputArgs.map_targetindex)>0):
+			pathoMapOptions.targetIndexPrefixes = inputArgs.map_targetindex.split(",")
+		if (len(inputArgs.map_filterindex)>0):
+			pathoMapOptions.filterIndexPrefixes = inputArgs.map_filterindex.split(",")
+		if (len(inputArgs.map_targetalign)>0):
+			pathoMapOptions.targetAlignFiles = inputArgs.map_targetalign.split(",")
+		if (len(inputArgs.map_filteralign)>0):
+			pathoMapOptions.filterAlignFiles = inputArgs.map_filteralign.split(",")
+		pathoMapOptions.btHome = inputArgs.map_bthome
+		pathoMapOptions.numThreads = inputArgs.map_numthreads
+		pathoMapOptions.exp_tag = inputArgs.map_exp_tag + "-"
+		PathoMapA.processPathoMap(pathoMapOptions)
 
-if (inputArgs.subcommand=='ID'):
-	pathoIdOptions = PathoID.PathoIdOptions(inputArgs.id_ali_file)
-	pathoIdOptions.ali_format = inputArgs.id_ali_format
-	pathoIdOptions.verbose = inputArgs.verbose
-	pathoIdOptions.out_matrix_flag = inputArgs.id_out_matrix
-	pathoIdOptions.score_cutoff = inputArgs.id_score_cutoff
-	pathoIdOptions.exp_tag = inputArgs.id_exp_tag
-	pathoIdOptions.outdir = inputArgs.id_outdir
-	pathoIdOptions.emEpsilon = inputArgs.id_emEpsilon
-	pathoIdOptions.maxIter = inputArgs.id_maxIter
-	pathoIdOptions.piPrior = inputArgs.id_piPrior
-	pathoIdOptions.thetaPrior = inputArgs.id_thetaPrior
-	pathoIdOptions.noalign = inputArgs.id_noalign
-	PathoID.pathoscope_reassign(pathoIdOptions)
+	if (inputArgs.subcommand=='ID'):
+		pathoIdOptions = PathoID.PathoIdOptions(inputArgs.id_ali_file)
+		pathoIdOptions.ali_format = inputArgs.id_ali_format
+		pathoIdOptions.verbose = inputArgs.verbose
+		pathoIdOptions.out_matrix_flag = inputArgs.id_out_matrix
+		pathoIdOptions.score_cutoff = inputArgs.id_score_cutoff
+		pathoIdOptions.exp_tag = inputArgs.id_exp_tag
+		pathoIdOptions.outdir = inputArgs.id_outdir
+		pathoIdOptions.emEpsilon = inputArgs.id_emEpsilon
+		pathoIdOptions.maxIter = inputArgs.id_maxIter
+		pathoIdOptions.piPrior = inputArgs.id_piPrior
+		pathoIdOptions.thetaPrior = inputArgs.id_thetaPrior
+		pathoIdOptions.noalign = inputArgs.id_noalign
+		PathoID.pathoscope_reassign(pathoIdOptions)
 
-if (inputArgs.subcommand=='REP'):
-	pathoReportOptions = PathoReportA.PathoReportOptions(inputArgs.rep_ali_file)
-	pathoReportOptions.verbose = inputArgs.verbose
-	pathoReportOptions.contigFlag = inputArgs.rep_contig_flag
-	pathoReportOptions.outDir = inputArgs.rep_outdir
-	pathoReportOptions.samtoolsHome = inputArgs.rep_samtoolshome
-	mysqlConf=(inputArgs.rep_dbhost,inputArgs.rep_dbport,inputArgs.rep_dbuser,
-		inputArgs.rep_dbpasswd,inputArgs.rep_db)
-	pathoReportOptions.mysqlConf = mysqlConf
-	PathoReportA.processPathoReport(pathoReportOptions)
+	if (inputArgs.subcommand=='REP'):
+		pathoReportOptions = PathoReportA.PathoReportOptions(inputArgs.rep_ali_file)
+		pathoReportOptions.verbose = inputArgs.verbose
+		pathoReportOptions.contigFlag = inputArgs.rep_contig_flag
+		pathoReportOptions.outDir = inputArgs.rep_outdir
+		pathoReportOptions.samtoolsHome = inputArgs.rep_samtoolshome
+		mysqlConf=(inputArgs.rep_dbhost,inputArgs.rep_dbport,inputArgs.rep_dbuser,
+			inputArgs.rep_dbpasswd,inputArgs.rep_db)
+		pathoReportOptions.mysqlConf = mysqlConf
+		PathoReportA.processPathoReport(pathoReportOptions)
 
-elapsed = time() - start;
-if inputArgs.verbose:
-	print "Total Elapsed Time: %d" % (elapsed)
+	elapsed = time() - start;
+	if inputArgs.verbose:
+		print "Total Elapsed Time: %d" % (elapsed)
+if __name__ == "__main__":
+	main()   
